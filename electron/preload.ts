@@ -73,6 +73,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
   // ========== 应用信息 ==========
   getAppPath: () => ipcRenderer.invoke('app:getPath'),
+  setBackgroundColor: (color: string) => ipcRenderer.invoke('app:setBackgroundColor', color),
 
   // ========== 持久化存储 ==========
   storeGet: (key: string) => ipcRenderer.invoke('store:get', key),

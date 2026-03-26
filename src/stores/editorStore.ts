@@ -23,9 +23,12 @@ interface EditorState {
   globalSearchVisible: boolean
   /** 版本历史弹窗是否可见 */
   versionHistoryVisible: boolean
+  /** 实时预览模式分屏比例（0~1，表示编辑器占比） */
+  splitRatio: number
 
   // 操作
   setViewMode: (mode: ViewMode) => void
+  setSplitRatio: (ratio: number) => void
   toggleSidebar: () => void
   setSidebarTab: (tab: SidebarTab) => void
   setWordCount: (count: WordCount) => void
@@ -48,8 +51,11 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   quickOpenVisible: false,
   globalSearchVisible: false,
   versionHistoryVisible: false,
+  splitRatio: 0.5,
 
   setViewMode: (viewMode) => set({ viewMode }),
+
+  setSplitRatio: (splitRatio) => set({ splitRatio: Math.max(0.2, Math.min(0.8, splitRatio)) }),
 
   toggleSidebar: () => set((state) => ({ sidebarVisible: !state.sidebarVisible })),
 

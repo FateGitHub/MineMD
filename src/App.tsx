@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useRef } from 'react'
 import { EditorView } from '@codemirror/view'
 import Sidebar from './components/Sidebar/Sidebar'
 import Editor from './components/Editor/Editor'
@@ -87,10 +87,51 @@ function App() {
     quickOpenVisible,
     globalSearchVisible,
     versionHistoryVisible,
+    splitRatio,
   } = useEditorStore()
 
   // 启用自动保存
   useAutoSave()
+
+  // 分屏拖拽相关
+  const splitContainerRef = useRef<HTMLDivElement>(null)
+  const isDraggingRef = useRef(false)
+
+  /** 分屏拖拽：mousedown 开始 */
+  const handleSplitMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    isDraggingRef.current = true
+    document.body.style.cursor = 'col-resize'
+    document.body.style.userSelect = 'none'
+    // 添加拖拽中的样式标记
+    document.body.classList.add('split-dragging')
+  }, [])
+
+  /** 分屏拖拽：mousemove + mouseup 全局监听 */
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDraggingRef.current || !splitContainerRef.current) return
+      const rect = splitContainerRef.current.getBoundingClientRect()
+      const ratio = (e.clientX - rect.left) / rect.width
+      useEditorStore.getState().setSplitRatio(ratio)
+    }
+
+    const handleMouseUp = () => {
+      if (isDraggingRef.current) {
+        isDraggingRef.current = false
+        document.body.style.cursor = ''
+        document.body.style.userSelect = ''
+        document.body.classList.remove('split-dragging')
+      }
+    }
+
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mouseup', handleMouseUp)
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [])
 
   // 应用启动时恢复上次会话（打开的文件夹和文件）及主题设置
   useEffect(() => {
@@ -105,9 +146,12 @@ function App() {
     }
   }, [])
 
-  // 设置主题 class
+  // 设置主题 class，并同步更新 Electron 窗口背景色
   useEffect(() => {
     document.documentElement.className = theme
+    // 通知主进程更新窗口背景色，避免暗色主题下窗口顶部区域出现白色
+    const bgColor = theme === 'dark' ? '#1c1c1e' : '#ffffff'
+    window.electronAPI?.setBackgroundColor(bgColor)
   }, [theme])
 
   // 处理菜单事件和全局快捷键
@@ -299,7 +343,7 @@ function App() {
         </div>
 
         {/* 编辑器/预览 —— 四模式布局 */}
-        <div className={`editor-main-area mode-${viewMode}`}>
+        <div ref={splitContainerRef} className={`editor-main-area mode-${viewMode}`}>
           {/* WYSIWYG 模式使用独立的 WysiwygEditor 组件 */}
           {viewMode === 'wysiwyg' ? (
             <div className="editor-pane">
@@ -308,16 +352,32 @@ function App() {
           ) : (
             <>
               {/* 编辑器始终保持挂载，避免切换模式时销毁重建 */}
-              <div className="editor-pane" style={{ display: viewMode === 'preview' ? 'none' : undefined }}>
+              <div
+                className="editor-pane"
+                style={{
+                  display: viewMode === 'preview' ? 'none' : undefined,
+                  ...(viewMode === 'live' ? { flex: `${splitRatio} 0 0` } : {}),
+                }}
+              >
                 <Editor />
               </div>
 
-              {/* 分屏分割线（仅实时预览模式显示） */}
-              {viewMode === 'live' && <div className="split-divider" />}
+              {/* 分屏分割线（仅实时预览模式显示，支持拖拽调整宽度） */}
+              {viewMode === 'live' && (
+                <div
+                  className="split-divider"
+                  onMouseDown={handleSplitMouseDown}
+                  onDoubleClick={() => useEditorStore.getState().setSplitRatio(0.5)}
+                  title="拖拽调整分屏比例，双击重置"
+                />
+              )}
 
               {/* 预览面板（实时预览 + 纯预览模式显示） */}
               {(viewMode === 'live' || viewMode === 'preview') && (
-                <div className="preview-pane">
+                <div
+                  className="preview-pane"
+                  style={viewMode === 'live' ? { flex: `${1 - splitRatio} 0 0` } : {}}
+                >
                   <Preview />
                 </div>
               )}

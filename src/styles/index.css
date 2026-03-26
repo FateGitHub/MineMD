@@ -672,6 +672,18 @@ body {
   background: var(--editor-accent);
 }
 
+/* 拖拽分割线时的全局样式 */
+body.split-dragging .split-divider {
+  background: var(--editor-accent);
+}
+
+/* 拖拽期间禁止面板内的文本选择和指针事件，避免拖拽时光标闪烁 */
+body.split-dragging .editor-pane,
+body.split-dragging .preview-pane {
+  pointer-events: none;
+  user-select: none;
+}
+
 /* 源码模式：编辑器独占 */
 .editor-main-area.mode-source .editor-pane {
   flex: 1;

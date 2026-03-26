@@ -23,7 +23,7 @@ let writeTimer: ReturnType<typeof setTimeout> | null = null
 const WRITE_DEBOUNCE = 500
 
 /** 从磁盘读取存储（仅首次或缓存为空时调用） */
-function loadStore(): Record<string, unknown> {
+export function loadStore(): Record<string, unknown> {
   if (storeCache !== null) return storeCache
   try {
     if (fs.existsSync(STORE_FILE)) {

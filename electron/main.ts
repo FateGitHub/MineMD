@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, dialog, session, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog, session, shell, nativeTheme } from 'electron'
 import path from 'node:path'
 import fs from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -6,7 +6,7 @@ import { createMenu } from './menu'
 import { registerFileIpc } from './ipc/fileIpc'
 import { registerFolderIpc } from './ipc/folderIpc'
 import { registerExportIpc } from './ipc/exportIpc'
-import { registerStoreIpc } from './ipc/storeIpc'
+import { registerStoreIpc, loadStore } from './ipc/storeIpc'
 
 // ES Module 中没有 __dirname，需要手动构造
 const __filename_esm = fileURLToPath(import.meta.url)
@@ -16,6 +16,19 @@ const RENDERER_DIST = path.join(__dirname_electron, '../dist')
 const VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL
 
 let mainWindow: BrowserWindow | null = null
+
+/** 根据已保存的主题设置获取窗口背景色，并同步设置原生主题 */
+function getThemeBackgroundColor(): string {
+  try {
+    const store = loadStore()
+    const isDark = store['theme'] === 'dark'
+    // 设置原生主题，影响 Windows 原生标题栏颜色
+    nativeTheme.themeSource = isDark ? 'dark' : 'light'
+    return isDark ? '#1c1c1e' : '#ffffff'
+  } catch {
+    return '#ffffff'
+  }
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -34,7 +47,7 @@ function createWindow() {
     // Windows 上也可以用无框模式，但保留系统边框更稳定
     frame: true,
     show: false,
-    backgroundColor: '#ffffff',
+    backgroundColor: getThemeBackgroundColor(),
   })
 
   // 窗口准备好后再显示，避免白屏闪烁
@@ -159,6 +172,17 @@ function registerIpcHandlers() {
     }
   })
 
+  // 更新窗口背景色和原生主题（主题切换时由渲染进程调用）
+  ipcMain.handle('app:setBackgroundColor', async (_event, color: string) => {
+    // 根据背景色判断主题方向，同步更新原生标题栏颜色
+    const isDark = color !== '#ffffff'
+    nativeTheme.themeSource = isDark ? 'dark' : 'light'
+    const win = BrowserWindow.getFocusedWindow()
+    if (win) {
+      win.setBackgroundColor(color)
+    }
+  })
+
   // 打印当前页面
   ipcMain.handle('app:print', async () => {
     const win = BrowserWindow.getFocusedWindow()
@@ -236,7 +260,7 @@ function registerIpcHandlers() {
       titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
       frame: true,
       show: false,
-      backgroundColor: '#ffffff',
+      backgroundColor: getThemeBackgroundColor(),
     })
 
     newWindow.once('ready-to-show', () => {

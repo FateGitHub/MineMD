@@ -14,8 +14,9 @@ import { getEditorTheme } from '../../editor/themes/editorTheme'
 import { markdownKeymap } from '../../editor/keymaps/markdownKeymap'
 import { countWords } from '../../utils/wordCount'
 import { setGlobalEditorView } from '../../editor/editorViewRef'
-import { copyAsHtml, copyAsMarkdown, pasteAsPlainText, smartPaste, handlePasteImage } from '../../utils/clipboard'
+import { copyAsHtml, copyAsMarkdown, pasteAsPlainText, handlePasteImage } from '../../utils/clipboard'
 import { getWysiwygBlockExtension, setWysiwygFileDir } from '../../editor/extensions/wysiwygBlockRenderer'
+import ContextMenu from './ContextMenu'
 
 /** 主题隔间 */
 const themeCompartment = new Compartment()
@@ -166,7 +167,7 @@ function WysiwygEditorInner() {
         basicSetup,
         keymap.of([...defaultKeymap, indentWithTab]),
         markdownKeymap(),
-        // 智能剪贴板快捷键
+        // 智能剪贴板快捷键（仅处理复制，粘贴通过 DOM paste 事件处理）
         keymap.of([
           {
             key: 'Mod-c',
@@ -183,26 +184,8 @@ function WysiwygEditorInner() {
               return true
             },
           },
-          {
-            key: 'Mod-v',
-            run: (view) => {
-              smartPaste(view).then((handled) => {
-                if (!handled) {
-                  navigator.clipboard.readText().then((text) => {
-                    if (text) {
-                      const range = view.state.selection.main
-                      view.dispatch({
-                        changes: { from: range.from, to: range.to, insert: text },
-                        selection: { anchor: range.from + text.length },
-                        scrollIntoView: true,
-                      })
-                    }
-                  }).catch(() => { /* 忽略 */ })
-                }
-              })
-              return true
-            },
-          },
+          // 不再拦截 Mod-v：让 DOM paste 事件自然触发，
+          // 由 pasteHandler 处理智能粘贴（图片/URL），普通文本走 CodeMirror 默认粘贴
         ]),
         markdown({ base: markdownLanguage, codeLanguages: languages }),
         search(),
@@ -227,15 +210,66 @@ function WysiwygEditorInner() {
     viewRef.current = view
     setGlobalEditorView(view)
 
-    // 注册 DOM paste 事件
+    // 注册 DOM paste 事件：处理截图粘贴和智能粘贴（URL 链接/图片 URL）
     const editorEl = editorRef.current
     const pasteHandler = (e: ClipboardEvent) => {
+      if (!viewRef.current) return
+
+      // 优先处理图片粘贴
       const hasImage = e.clipboardData?.items
         ? Array.from(e.clipboardData.items).some((item) => item.type.startsWith('image/'))
         : false
-      if (hasImage && viewRef.current) {
+      if (hasImage) {
         handlePasteImage(e, viewRef.current)
+        return
       }
+
+      // 处理智能文本粘贴（URL 链接、图片 URL）
+      const plainText = e.clipboardData?.getData('text/plain')
+      if (plainText) {
+        const trimmed = plainText.trim()
+        const view = viewRef.current
+        const { state } = view
+        const range = state.selection.main
+        const selectedText = state.sliceDoc(range.from, range.to)
+
+        // 检查是否是图片 URL
+        const imgPattern = /^https?:\/\/\S+\.(png|jpg|jpeg|gif|webp|svg|bmp|ico)(\?.*)?$/i
+        if (imgPattern.test(trimmed)) {
+          e.preventDefault()
+          const insert = `![${selectedText || '图片'}](${trimmed})`
+          view.dispatch({
+            changes: { from: range.from, to: range.to, insert },
+            selection: { anchor: range.from + insert.length },
+            scrollIntoView: true,
+          })
+          return
+        }
+
+        // 检查是否是 URL（且有选中文本时包裹为链接）
+        const urlPattern = /^https?:\/\/\S+$/
+        if (urlPattern.test(trimmed)) {
+          e.preventDefault()
+          if (selectedText) {
+            const insert = `[${selectedText}](${trimmed})`
+            view.dispatch({
+              changes: { from: range.from, to: range.to, insert },
+              selection: { anchor: range.from + insert.length },
+              scrollIntoView: true,
+            })
+          } else {
+            const insert = `[](${trimmed})`
+            view.dispatch({
+              changes: { from: range.from, to: range.to, insert },
+              selection: { anchor: range.from + 1 },
+              scrollIntoView: true,
+            })
+          }
+          return
+        }
+      }
+
+      // 普通文本：不调用 preventDefault()，让 CodeMirror 默认 paste 处理
     }
     editorEl.addEventListener('paste', pasteHandler)
 
@@ -297,6 +331,7 @@ function WysiwygEditorInner() {
       <div className="editor-content-area">
         <div ref={editorRef} />
       </div>
+      <ContextMenu editorView={viewRef.current} />
     </div>
   )
 }

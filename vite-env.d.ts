@@ -43,6 +43,7 @@ interface ElectronAPI {
 
   // 应用信息
   getAppPath: () => Promise<string>
+  setBackgroundColor: (color: string) => Promise<void>
 
   // 持久化存储
   storeGet: (key: string) => Promise<unknown>
