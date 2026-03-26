@@ -1,0 +1,1746 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========== CSS 变量定义 —— Apple HIG 风格 ========== */
+:root {
+  /* 亮色主题 — Apple 标准色板 */
+  --editor-bg: #ffffff;
+  --editor-surface: #f5f5f7;
+  --editor-text: #1d1d1f;
+  --editor-text-secondary: #86868b;
+  --editor-border: rgba(0, 0, 0, 0.08);
+  --editor-separator: rgba(0, 0, 0, 0.12);
+  --editor-accent: #007aff;
+  --editor-hover: rgba(0, 0, 0, 0.04);
+  --editor-active: rgba(0, 0, 0, 0.08);
+  --editor-sidebar-bg: rgba(245, 245, 247, 0.72);
+  --editor-sidebar-active: rgba(0, 0, 0, 0.06);
+  --editor-sidebar-hover: rgba(0, 0, 0, 0.04);
+  --editor-toolbar-bg: rgba(255, 255, 255, 0.72);
+  --editor-statusbar-bg: #f5f5f7;
+  --editor-statusbar-text: #86868b;
+  --editor-selection: rgba(0, 122, 255, 0.2);
+  --editor-link-color: #007aff;
+  --editor-heading-color: #1d1d1f;
+  --editor-quote-border: rgba(0, 0, 0, 0.12);
+  --editor-quote-text: #86868b;
+  --editor-code-bg: #f5f5f7;
+  --editor-code-text: #d63384;
+  --editor-hr-color: rgba(0, 0, 0, 0.1);
+  --editor-table-border: rgba(0, 0, 0, 0.1);
+  --editor-table-head-bg: #f5f5f7;
+  --editor-highlight-bg: rgba(255, 214, 10, 0.3);
+
+  /* 字体栈 — Apple 系统字体优先 */
+  --editor-font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --editor-mono-font: 'SF Mono', 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Menlo, Consolas, monospace;
+  --editor-font-size: 16px;
+  --editor-line-height: 1.6;
+  --editor-content-max-width: 860px;
+  --editor-writing-area-padding: 32px 64px;
+
+  /* 间距体系 — 4px 倍数 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* 圆角体系 — Apple 标准 */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* 阴影体系 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.06);
+
+  /* 动效曲线 — Apple ease */
+  --ease-default: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+
+  /* 过渡变量（兼容旧引用） */
+  --transition-fast: var(--duration-fast) var(--ease-default);
+  --transition-normal: var(--duration-normal) var(--ease-default);
+
+  /* 侧边栏 */
+  --sidebar-width: 260px;
+  --sidebar-header-height: 40px;
+  --sidebar-item-height: 30px;
+}
+
+.dark {
+  /* 暗色主题 — Apple 暗色色板 */
+  --editor-bg: #1c1c1e;
+  --editor-surface: #2c2c2e;
+  --editor-text: #f5f5f7;
+  --editor-text-secondary: #98989d;
+  --editor-border: rgba(255, 255, 255, 0.08);
+  --editor-separator: rgba(255, 255, 255, 0.12);
+  --editor-accent: #0a84ff;
+  --editor-hover: rgba(255, 255, 255, 0.06);
+  --editor-active: rgba(255, 255, 255, 0.10);
+  --editor-sidebar-bg: rgba(44, 44, 46, 0.72);
+  --editor-sidebar-active: rgba(255, 255, 255, 0.08);
+  --editor-sidebar-hover: rgba(255, 255, 255, 0.06);
+  --editor-toolbar-bg: rgba(44, 44, 46, 0.72);
+  --editor-statusbar-bg: #2c2c2e;
+  --editor-statusbar-text: #98989d;
+  --editor-selection: rgba(10, 132, 255, 0.3);
+  --editor-link-color: #0a84ff;
+  --editor-heading-color: #f5f5f7;
+  --editor-quote-border: rgba(255, 255, 255, 0.12);
+  --editor-quote-text: #98989d;
+  --editor-code-bg: #2c2c2e;
+  --editor-code-text: #ff6b9d;
+  --editor-hr-color: rgba(255, 255, 255, 0.1);
+  --editor-table-border: rgba(255, 255, 255, 0.1);
+  --editor-table-head-bg: #2c2c2e;
+  --editor-highlight-bg: rgba(255, 214, 10, 0.25);
+
+  /* 暗色阴影更深 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3), 0 1px 4px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* ========== 全局重置 ========== */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--editor-font-family);
+  font-size: var(--editor-font-size);
+  color: var(--editor-text);
+  background-color: var(--editor-bg);
+  line-height: var(--editor-line-height);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'liga' 1, 'kern' 1;
+  letter-spacing: -0.01em;
+}
+
+/* ========== 滚动条 —— Apple 风格极细圆润 ========== */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* 滚动条仅在 hover 时出现 */
+.editor-wrapper::-webkit-scrollbar-thumb,
+.sidebar-content::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+.editor-wrapper:hover::-webkit-scrollbar-thumb,
+.sidebar-content:hover::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+}
+.dark .editor-wrapper:hover::-webkit-scrollbar-thumb,
+.dark .sidebar-content:hover::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ========== 布局容器 ========== */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--editor-bg);
+}
+
+/* ========== 标题栏 —— Apple 极简 ========== */
+.titlebar {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 var(--space-4);
+  background: var(--editor-surface);
+  border-bottom: 1px solid var(--editor-border);
+  -webkit-app-region: drag;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.titlebar-no-drag {
+  -webkit-app-region: no-drag;
+}
+
+.titlebar .file-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--editor-text);
+  opacity: 0.7;
+  letter-spacing: -0.01em;
+}
+
+.titlebar .file-name .modified-dot {
+  color: #ff453a;
+  margin-left: var(--space-1);
+}
+
+/* ========== 工具栏 —— Apple 毛玻璃 ========== */
+.toolbar {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 var(--space-2);
+  background: var(--editor-toolbar-bg);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid var(--editor-border);
+  user-select: none;
+  flex-shrink: 0;
+  gap: var(--space-1);
+  position: relative;
+  z-index: 100;
+}
+
+@supports not (backdrop-filter: blur(20px)) {
+  .toolbar {
+    background: var(--editor-surface);
+  }
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--editor-separator);
+  margin: 0 var(--space-2);
+  flex-shrink: 0;
+}
+
+.toolbar-spacer {
+  flex: 1;
+}
+
+.toolbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--editor-text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast), transform var(--duration-fast) var(--ease-spring);
+  opacity: 0.65;
+}
+
+.toolbar-btn:hover {
+  background: var(--editor-hover);
+  opacity: 1;
+}
+
+.toolbar-btn:active {
+  transform: scale(0.94);
+}
+
+.toolbar-btn.active {
+  background: var(--editor-active);
+  color: var(--editor-accent);
+  opacity: 1;
+}
+
+/* ========== 工具栏下拉菜单 ========== */
+.toolbar-dropdown {
+  position: relative;
+}
+
+.toolbar-dropdown-trigger {
+  display: flex;
+  align-items: center;
+}
+
+.toolbar-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 240px;
+  background: var(--editor-bg);
+  border: 1px solid var(--editor-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-1) 0;
+  z-index: 1000;
+  animation: dropdown-fade-in var(--duration-fast) var(--ease-default);
+}
+
+@keyframes dropdown-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.toolbar-menu-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--editor-text);
+  transition: background var(--duration-fast) var(--ease-default);
+  position: relative;
+  gap: var(--space-2);
+  border-radius: var(--radius-sm);
+  margin: 0 var(--space-1);
+}
+
+.toolbar-menu-item:hover {
+  background: var(--editor-hover);
+}
+
+.toolbar-menu-icon {
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toolbar-menu-label {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.toolbar-menu-shortcut {
+  font-size: 11px;
+  color: var(--editor-text-secondary);
+  margin-left: var(--space-4);
+  flex-shrink: 0;
+}
+
+.toolbar-menu-arrow {
+  font-size: 10px;
+  color: var(--editor-text-secondary);
+  margin-left: var(--space-2);
+  flex-shrink: 0;
+}
+
+.toolbar-menu-divider {
+  height: 1px;
+  background: var(--editor-separator);
+  margin: var(--space-1) var(--space-2);
+}
+
+/* 导出子菜单 */
+.toolbar-menu-has-sub {
+  position: relative;
+}
+
+.toolbar-submenu {
+  position: absolute;
+  left: 100%;
+  top: -4px;
+  min-width: 200px;
+  background: var(--editor-bg);
+  border: 1px solid var(--editor-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-1) 0;
+  z-index: 1001;
+  animation: dropdown-fade-in var(--duration-fast) var(--ease-default);
+}
+
+/* ========== 侧边栏 —— Apple 毛玻璃 ========== */
+.sidebar-wrapper {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  background: var(--editor-sidebar-bg);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-right: 1px solid var(--editor-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: width var(--transition-normal), margin-left var(--transition-normal), opacity var(--transition-normal);
+}
+
+@supports not (backdrop-filter: blur(20px)) {
+  .sidebar-wrapper {
+    background: var(--editor-surface);
+  }
+}
+
+.sidebar-wrapper.collapsed {
+  width: 0;
+  border-right: none;
+  opacity: 0;
+  overflow: hidden;
+}
+
+/* 侧边栏标签 — Apple 分段控制器 */
+.sidebar-tabs {
+  display: flex;
+  align-items: center;
+  height: var(--sidebar-header-height);
+  padding: 0 var(--space-3);
+  flex-shrink: 0;
+  gap: 0;
+}
+
+.sidebar-tabs-inner {
+  display: flex;
+  width: 100%;
+  background: var(--editor-active);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+  position: relative;
+}
+
+.sidebar-tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--editor-text-secondary);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  border-radius: calc(var(--radius-sm) - 2px);
+  transition: color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
+  letter-spacing: 0;
+  text-transform: none;
+  position: relative;
+  z-index: 1;
+}
+
+.sidebar-tab-btn:hover {
+  color: var(--editor-text);
+}
+
+.sidebar-tab-btn.active {
+  color: var(--editor-text);
+  font-weight: 600;
+  background: var(--editor-bg);
+  box-shadow: var(--shadow-sm);
+}
+
+.sidebar-tab-btn.active::after {
+  display: none;
+}
+
+/* 侧边栏内容 */
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* ---- 文件树 ---- */
+.file-tree-item {
+  display: flex;
+  align-items: center;
+  height: var(--sidebar-item-height);
+  padding: 0 var(--space-2);
+  margin: 0 var(--space-2);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--editor-text);
+  transition: background var(--transition-fast);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: var(--radius-sm);
+}
+
+.file-tree-item:hover {
+  background: var(--editor-hover);
+}
+
+.file-tree-item.active {
+  background: var(--editor-active);
+}
+
+.file-tree-item .icon {
+  width: 16px;
+  height: 16px;
+  margin-right: var(--space-2);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--editor-text-secondary);
+}
+
+.file-tree-item .arrow {
+  width: 14px;
+  height: 14px;
+  margin-right: 2px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  color: var(--editor-text-secondary);
+  transition: transform var(--transition-fast);
+}
+
+.file-tree-item .arrow.expanded {
+  transform: rotate(90deg);
+}
+
+.file-tree-item .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 文件树内联重命名输入框 */
+.file-tree-rename-input {
+  flex: 1;
+  min-width: 0;
+  padding: 1px 4px;
+  border: 1px solid var(--editor-accent);
+  border-radius: 4px;
+  background: var(--editor-bg);
+  color: var(--editor-text);
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+}
+
+.file-tree-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12) var(--space-5);
+  color: var(--editor-text-secondary);
+  font-size: 13px;
+  text-align: center;
+}
+
+.file-tree-empty .open-btn {
+  margin-top: var(--space-4);
+  padding: var(--space-2) var(--space-5);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--editor-text);
+  background: transparent;
+  border: 1px solid var(--editor-separator);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.file-tree-empty .open-btn:hover {
+  background: var(--editor-hover);
+  border-color: var(--editor-text-secondary);
+}
+
+/* ---- 大纲 ---- */
+.outline-item {
+  display: flex;
+  align-items: center;
+  height: var(--sidebar-item-height);
+  padding: 0 var(--space-3);
+  margin: 0 var(--space-2);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--editor-text);
+  transition: background var(--transition-fast);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: var(--radius-sm);
+}
+
+.outline-item:hover {
+  background: var(--editor-hover);
+}
+
+.outline-item.active {
+  background: var(--editor-active);
+  font-weight: 500;
+}
+
+.outline-empty {
+  padding: var(--space-12) var(--space-5);
+  text-align: center;
+  color: var(--editor-text-secondary);
+  font-size: 13px;
+}
+
+/* ========== 编辑器区域 ========== */
+
+/* 三模式主布局容器 */
+.editor-main-area {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 编辑器面板 */
+.editor-pane {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* 预览面板 */
+.preview-pane {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* 分屏分割线 */
+.split-divider {
+  width: 1px;
+  flex-shrink: 0;
+  background: var(--editor-border);
+  position: relative;
+  cursor: col-resize;
+  transition: background var(--transition-fast);
+}
+
+.split-divider::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -3px;
+  right: -3px;
+}
+
+.split-divider:hover {
+  background: var(--editor-accent);
+}
+
+/* 源码模式：编辑器独占 */
+.editor-main-area.mode-source .editor-pane {
+  flex: 1;
+}
+
+/* 实时预览模式：左右等分 */
+.editor-main-area.mode-live .editor-pane {
+  flex: 1;
+}
+
+.editor-main-area.mode-live .preview-pane {
+  flex: 1;
+}
+
+/* 纯预览模式：预览独占 */
+.editor-main-area.mode-preview .preview-pane {
+  flex: 1;
+}
+
+/* 即时渲染模式：编辑器独占（与源码模式类似） */
+.editor-main-area.mode-wysiwyg .editor-pane {
+  flex: 1;
+}
+
+.editor-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--editor-bg);
+}
+
+.editor-content-area {
+  max-width: var(--editor-content-max-width);
+  margin: 0 auto;
+  padding: var(--editor-writing-area-padding);
+  min-height: 100%;
+}
+
+/* CodeMirror 编辑器样式覆盖 */
+.editor-wrapper .cm-editor {
+  height: 100%;
+  outline: none;
+  font-size: var(--editor-font-size);
+}
+
+.editor-wrapper .cm-editor.cm-focused {
+  outline: none;
+}
+
+.editor-wrapper .cm-editor .cm-scroller {
+  font-family: var(--editor-font-family);
+  line-height: var(--editor-line-height);
+  overflow: visible;
+}
+
+.editor-wrapper .cm-editor .cm-content {
+  padding: 0;
+  caret-color: var(--editor-accent);
+  max-width: 100%;
+}
+
+/* 纯预览模式隐藏行号 */
+.editor-main-area.mode-preview .editor-wrapper .cm-editor .cm-gutters {
+  display: none;
+}
+
+/* 活跃行高亮 — 极淡背景 */
+.editor-wrapper .cm-editor .cm-activeLine {
+  background: var(--editor-hover);
+}
+
+/* 选区颜色 */
+.editor-wrapper .cm-editor .cm-selectionBackground,
+.editor-wrapper .cm-editor.cm-focused .cm-selectionBackground {
+  background: var(--editor-selection) !important;
+}
+
+/* CodeMirror Markdown 语法高亮 */
+.editor-wrapper .cm-editor .cm-header-1 {
+  font-size: 2em;
+  font-weight: 700;
+  color: var(--editor-heading-color);
+  line-height: 1.3;
+}
+
+.editor-wrapper .cm-editor .cm-header-2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: var(--editor-heading-color);
+  line-height: 1.35;
+}
+
+.editor-wrapper .cm-editor .cm-header-3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  color: var(--editor-heading-color);
+  line-height: 1.4;
+}
+
+.editor-wrapper .cm-editor .cm-header-4 {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--editor-heading-color);
+  line-height: 1.4;
+}
+
+.editor-wrapper .cm-editor .cm-header-5,
+.editor-wrapper .cm-editor .cm-header-6 {
+  font-size: 1em;
+  font-weight: 600;
+  color: var(--editor-heading-color);
+  line-height: 1.4;
+}
+
+/* 光标样式 — Apple 蓝色竖线 */
+.editor-wrapper .cm-editor .cm-cursor {
+  border-left-width: 2px;
+  border-left-color: var(--editor-accent);
+}
+
+/* ========== 状态栏 —— Apple 极简 ========== */
+.statusbar {
+  display: flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 var(--space-4);
+  background: var(--editor-statusbar-bg);
+  border-top: 1px solid var(--editor-border);
+  font-size: 11px;
+  color: var(--editor-statusbar-text);
+  user-select: none;
+  flex-shrink: 0;
+  gap: var(--space-4);
+}
+
+.statusbar .status-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.statusbar .status-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.statusbar .status-item {
+  cursor: default;
+}
+
+.statusbar .status-item.clickable {
+  cursor: pointer;
+  padding: 1px var(--space-1);
+  border-radius: 3px;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.statusbar .status-item.clickable:hover {
+  color: var(--editor-text);
+  background: var(--editor-hover);
+}
+
+.statusbar .status-divider {
+  width: 1px;
+  height: 10px;
+  background: var(--editor-separator);
+}
+
+/* ========== Markdown 预览渲染样式 —— Apple 清爽风格 ========== */
+.markdown-body {
+  font-family: var(--editor-font-family);
+  font-size: var(--editor-font-size);
+  line-height: var(--editor-line-height);
+  color: var(--editor-text);
+  word-wrap: break-word;
+}
+
+.markdown-body > *:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* 标题 */
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-4);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--editor-heading-color);
+  letter-spacing: -0.02em;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  font-weight: 700;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--editor-separator);
+}
+
+.markdown-body h2 {
+  font-size: 1.5em;
+  padding-bottom: 0.25em;
+  border-bottom: 1px solid var(--editor-separator);
+}
+
+.markdown-body h3 {
+  font-size: 1.25em;
+}
+
+.markdown-body h4 {
+  font-size: 1em;
+}
+
+.markdown-body h5 {
+  font-size: 0.875em;
+}
+
+.markdown-body h6 {
+  font-size: 0.85em;
+  color: var(--editor-text-secondary);
+}
+
+/* 段落 */
+.markdown-body p {
+  margin-top: 0;
+  margin-bottom: var(--space-4);
+}
+
+/* 链接 */
+.markdown-body a {
+  color: var(--editor-link-color);
+  text-decoration: none;
+}
+
+.markdown-body a:hover {
+  text-decoration: underline;
+}
+
+/* 加粗 & 斜体 */
+.markdown-body strong {
+  font-weight: 600;
+}
+
+.markdown-body em {
+  font-style: italic;
+}
+
+/* 删除线 */
+.markdown-body del {
+  text-decoration: line-through;
+}
+
+/* 下划线 */
+.markdown-body u {
+  text-decoration: underline;
+}
+
+/* 行内代码 */
+.markdown-body :not(pre) > code {
+  background: var(--editor-code-bg);
+  color: var(--editor-code-text);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-family: var(--editor-mono-font);
+  font-size: 0.88em;
+}
+
+/* 代码块 */
+.markdown-body pre {
+  background: var(--editor-code-bg);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  overflow-x: auto;
+  margin: var(--space-4) 0;
+  line-height: 1.5;
+}
+
+.markdown-body pre code {
+  font-family: var(--editor-mono-font);
+  font-size: 0.9em;
+  background: transparent;
+  color: var(--editor-text);
+  padding: 0;
+  border-radius: 0;
+}
+
+/* 块引用 */
+.markdown-body blockquote {
+  margin: var(--space-4) 0;
+  padding: 0 1em;
+  color: var(--editor-quote-text);
+  border-left: 3px solid var(--editor-accent);
+}
+
+.markdown-body blockquote > :first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* 列表 */
+.markdown-body ul {
+  padding-left: 2em;
+  margin-top: 0;
+  margin-bottom: var(--space-4);
+  list-style-type: disc;
+}
+
+.markdown-body ol {
+  padding-left: 2em;
+  margin-top: 0;
+  margin-bottom: var(--space-4);
+  list-style-type: decimal;
+}
+
+.markdown-body ul ul {
+  list-style-type: circle;
+}
+
+.markdown-body ul ul ul {
+  list-style-type: square;
+}
+
+.markdown-body li {
+  margin-top: var(--space-1);
+}
+
+.markdown-body li + li {
+  margin-top: var(--space-1);
+}
+
+.markdown-body li > p {
+  margin-top: var(--space-4);
+}
+
+/* 任务列表 */
+.markdown-body .task-list-item {
+  list-style-type: none;
+  position: relative;
+  padding-left: 0;
+}
+
+.markdown-body .task-list-item input[type="checkbox"] {
+  margin-right: var(--space-2);
+  position: relative;
+  top: 1px;
+  accent-color: var(--editor-accent);
+}
+
+/* 表格 */
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  margin: var(--space-4) 0;
+  overflow: auto;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--editor-table-border);
+}
+
+.markdown-body table th {
+  font-weight: 600;
+  background: var(--editor-table-head-bg);
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.dark .markdown-body table tr:nth-child(2n) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* 水平线 */
+.markdown-body hr {
+  height: 1px;
+  padding: 0;
+  margin: var(--space-6) 0;
+  background-color: var(--editor-separator);
+  border: 0;
+}
+
+/* 图片 */
+.markdown-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+/* 高亮 */
+.markdown-body mark {
+  background: var(--editor-highlight-bg);
+  padding: 2px var(--space-1);
+  border-radius: 3px;
+}
+
+.dark .markdown-body mark {
+  color: #fff;
+}
+
+/* KaTeX 公式 */
+.markdown-body .katex-display {
+  margin: var(--space-4) 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: var(--space-2) 0;
+}
+
+.markdown-body .katex {
+  font-size: 1.1em;
+}
+
+/* Mermaid 图表 */
+.markdown-body .mermaid {
+  text-align: center;
+  margin: var(--space-4) 0;
+}
+
+/* 脚注 */
+.markdown-body .footnotes {
+  font-size: 0.85em;
+  color: var(--editor-text-secondary);
+  border-top: 1px solid var(--editor-separator);
+  margin-top: var(--space-8);
+  padding-top: var(--space-4);
+}
+
+/* ========== 过渡动画 ========== */
+.sidebar-transition {
+  transition: width var(--transition-normal), opacity var(--transition-normal);
+}
+
+/* ========== 拖拽分割条 ========== */
+.resize-handle {
+  width: 3px;
+  cursor: col-resize;
+  background: transparent;
+  transition: background var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.resize-handle:hover,
+.resize-handle.dragging {
+  background: var(--editor-accent);
+}
+
+/* ========== 焦点模式 ========== */
+.focus-mode .titlebar,
+.focus-mode .statusbar {
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.focus-mode:hover .titlebar,
+.focus-mode:hover .statusbar {
+  opacity: 1;
+}
+
+/* ========== 打字机模式 ========== */
+.typewriter-mode .cm-editor .cm-scroller {
+  padding-bottom: 50vh;
+}
+
+/* ========== 快速打开弹窗 —— Apple 风格 ========== */
+.quick-open-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  padding-top: 15vh;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.quick-open-panel {
+  width: 520px;
+  max-height: 480px;
+  background: var(--editor-bg);
+  border: 1px solid var(--editor-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  align-self: flex-start;
+  animation: panel-in var(--duration-normal) var(--ease-spring);
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.quick-open-input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  font-size: 15px;
+  border: none;
+  border-bottom: 1px solid var(--editor-border);
+  outline: none;
+  background: var(--editor-bg);
+  color: var(--editor-text);
+  font-family: var(--editor-font-family);
+  transition: box-shadow var(--transition-fast);
+}
+
+.quick-open-input:focus {
+  box-shadow: inset 0 -2px 0 var(--editor-accent);
+}
+
+.quick-open-input::placeholder {
+  color: var(--editor-text-secondary);
+}
+
+.quick-open-list {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 360px;
+}
+
+.quick-open-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  gap: var(--space-2);
+  transition: background var(--transition-fast);
+  border-radius: var(--radius-sm);
+  margin: 1px var(--space-1);
+}
+
+.quick-open-item:hover,
+.quick-open-item.selected {
+  background: var(--editor-active);
+}
+
+.quick-open-icon {
+  flex-shrink: 0;
+  font-size: 13px;
+  opacity: 0.5;
+  display: flex;
+  align-items: center;
+}
+
+.quick-open-name {
+  font-size: 14px;
+  color: var(--editor-text);
+  white-space: nowrap;
+}
+
+.quick-open-path {
+  font-size: 11px;
+  color: var(--editor-text-secondary);
+  margin-left: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.quick-open-empty {
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+  color: var(--editor-text-secondary);
+  font-size: 13px;
+}
+
+/* ========== 全局搜索 —— Apple 风格 ========== */
+.global-search-panel {
+  width: 600px;
+  max-height: 520px;
+}
+
+.global-search-header {
+  display: flex;
+  gap: 0;
+}
+
+.global-search-header .quick-open-input {
+  flex: 1;
+  border-bottom: none;
+  border-right: 1px solid var(--editor-border);
+}
+
+.global-search-btn {
+  padding: 0 var(--space-5);
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  background: var(--editor-accent);
+  border: none;
+  border-bottom: 1px solid var(--editor-border);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+  white-space: nowrap;
+}
+
+.global-search-btn:hover {
+  opacity: 0.85;
+}
+
+.global-search-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.search-file-group {
+  border-bottom: 1px solid var(--editor-border);
+}
+
+.search-file-name {
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-4);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--editor-text);
+  background: var(--editor-surface);
+  gap: var(--space-2);
+}
+
+.search-count {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--editor-text-secondary);
+  background: var(--editor-active);
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-4);
+  gap: var(--space-3);
+  cursor: pointer;
+  font-size: 13px;
+  transition: background var(--transition-fast);
+}
+
+.search-result-item:hover {
+  background: var(--editor-hover);
+}
+
+.search-line-no {
+  color: var(--editor-text-secondary);
+  font-size: 11px;
+  font-family: var(--editor-mono-font);
+  min-width: 32px;
+  text-align: right;
+}
+
+.search-line-text {
+  color: var(--editor-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-line-text mark {
+  background: var(--editor-highlight-bg);
+  color: inherit;
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
+/* ========== 版本历史弹窗 ========== */
+.version-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--editor-border);
+}
+
+.version-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--editor-text);
+  margin: 0;
+}
+
+.version-file-name {
+  font-size: 12px;
+  color: var(--editor-text-secondary);
+}
+
+.version-list {
+  width: 200px;
+  border-right: 1px solid var(--editor-border);
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.version-item {
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  border-bottom: 1px solid var(--editor-border);
+  transition: background var(--transition-fast);
+}
+
+.version-item:hover {
+  background: var(--editor-hover);
+}
+
+.version-item.selected {
+  background: var(--editor-active);
+}
+
+.version-time {
+  font-size: 13px;
+  color: var(--editor-text);
+}
+
+.version-size {
+  font-size: 11px;
+  color: var(--editor-text-secondary);
+  margin-top: 2px;
+}
+
+.version-preview {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.version-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--editor-border);
+  font-size: 12px;
+  color: var(--editor-text-secondary);
+}
+
+.version-restore-btn {
+  padding: var(--space-1) var(--space-3);
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  background: var(--editor-accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.version-restore-btn:hover {
+  opacity: 0.85;
+}
+
+.version-preview-content {
+  flex: 1;
+  padding: var(--space-4);
+  overflow: auto;
+  font-size: 13px;
+  font-family: var(--editor-mono-font);
+  line-height: 1.6;
+  color: var(--editor-text);
+  background: var(--editor-bg);
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin: 0;
+}
+
+/* ========== Mermaid 渲染 ========== */
+.mermaid-rendered {
+  text-align: center;
+  margin: var(--space-4) 0;
+  padding: var(--space-4);
+  background: var(--editor-code-bg);
+  border-radius: var(--radius-md);
+}
+
+.mermaid-rendered svg {
+  max-width: 100%;
+}
+
+/* ========== CodeMirror 搜索面板样式覆盖 ========== */
+.cm-panels {
+  background: var(--editor-surface) !important;
+  border-bottom: 1px solid var(--editor-border) !important;
+}
+
+.cm-panels input,
+.cm-panels button {
+  font-family: var(--editor-font-family);
+  font-size: 13px;
+}
+
+.cm-panels input {
+  border: 1px solid var(--editor-separator);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+  background: var(--editor-bg);
+  color: var(--editor-text);
+  outline: none;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.cm-panels input:focus {
+  border-color: var(--editor-accent);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+}
+
+.cm-panels button {
+  background: transparent;
+  border: 1px solid var(--editor-separator);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--space-2);
+  color: var(--editor-text);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.cm-panels button:hover {
+  background: var(--editor-hover);
+}
+
+.cm-searchMatch {
+  background: var(--editor-highlight-bg) !important;
+}
+
+.cm-searchMatch-selected {
+  background: rgba(0, 122, 255, 0.2) !important;
+}
+
+/* ========== 右键上下文菜单 —— Apple 风格 ========== */
+.context-menu {
+  position: fixed;
+  z-index: 10000;
+  min-width: 240px;
+  background: var(--editor-bg);
+  border: 1px solid var(--editor-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-1) 0;
+  animation: context-menu-in var(--duration-fast) var(--ease-spring);
+  user-select: none;
+}
+
+@keyframes context-menu-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.context-menu-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--editor-text);
+  transition: background var(--duration-fast) var(--ease-default);
+  position: relative;
+  gap: 8px;
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+  margin: 0 var(--space-1);
+}
+
+.context-menu-item:hover,
+.context-menu-item.active {
+  background: var(--editor-accent);
+  color: #fff;
+}
+
+.context-menu-item:hover .context-menu-shortcut,
+.context-menu-item.active .context-menu-shortcut {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.context-menu-item:hover .context-menu-icon,
+.context-menu-item.active .context-menu-icon {
+  opacity: 1;
+}
+
+/* 危险操作（删除等）样式 */
+.context-menu-item.danger {
+  color: #ff3b30;
+}
+
+.context-menu-item.danger:hover {
+  background: #ff3b30;
+  color: #fff;
+}
+
+.context-menu-icon {
+  width: 16px;
+  height: 16px;
+  text-align: center;
+  flex-shrink: 0;
+  font-size: 14px;
+  opacity: 0.65;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.context-menu-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.context-menu-label {
+  flex: 1;
+}
+
+.context-menu-shortcut {
+  font-size: 11px;
+  color: var(--editor-text-secondary);
+  margin-left: var(--space-6);
+  flex-shrink: 0;
+  font-family: var(--editor-font-family);
+}
+
+.context-menu-arrow {
+  font-size: 10px;
+  color: var(--editor-text-secondary);
+  margin-left: var(--space-1);
+  flex-shrink: 0;
+}
+
+.context-menu-divider {
+  height: 1px;
+  background: var(--editor-separator);
+  margin: var(--space-1) var(--space-2);
+}
+
+/* 子菜单 */
+.context-submenu {
+  position: absolute;
+  left: calc(100% - 4px);
+  top: -6px;
+  min-width: 220px;
+  background: var(--editor-bg);
+  border: 1px solid var(--editor-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-1) 0;
+  z-index: 10001;
+  animation: context-menu-in var(--duration-fast) var(--ease-spring);
+}
+
+/* ========== WYSIWYG 即时渲染模式 ========== */
+
+/* WYSIWYG 容器 */
+.wysiwyg-wrapper {
+  position: relative;
+}
+
+/* WYSIWYG 模式下 CodeMirror 编辑器样式调整 */
+.wysiwyg-wrapper .cm-editor {
+  height: 100%;
+}
+
+.wysiwyg-wrapper .cm-editor .cm-scroller {
+  overflow: auto;
+}
+
+/* 渲染后的 Markdown 块 —— 与 Preview 样式完全一致 */
+.wysiwyg-rendered-block {
+  cursor: text;
+  border-radius: var(--radius-sm);
+  transition: background var(--duration-fast) var(--ease-default);
+}
+
+.wysiwyg-rendered-block:hover {
+  background: rgba(0, 122, 255, 0.03);
+}
+
+.dark .wysiwyg-rendered-block:hover {
+  background: rgba(10, 132, 255, 0.05);
+}
+
+/* 确保渲染块内的 markdown-body 样式正确继承 */
+.wysiwyg-rendered-block.markdown-body {
+  font-family: var(--editor-font-family);
+  font-size: var(--editor-font-size);
+  line-height: var(--editor-line-height);
+  color: var(--editor-text);
+}
+
+.wysiwyg-rendered-block.markdown-body > *:first-child {
+  margin-top: 0 !important;
+}
+
+.wysiwyg-rendered-block.markdown-body > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* 渲染块中的图片 */
+.wysiwyg-rendered-block img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+/* 渲染块中的代码块 */
+.wysiwyg-rendered-block pre {
+  background: var(--editor-code-bg);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  overflow-x: auto;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.wysiwyg-rendered-block pre code {
+  font-family: var(--editor-mono-font);
+  font-size: 0.9em;
+  background: transparent;
+  color: var(--editor-text);
+  padding: 0;
+}
+
+/* 渲染块中的 KaTeX 公式 */
+.wysiwyg-rendered-block .katex-display {
+  margin: var(--space-4) 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: var(--space-2) 0;
+}
+
+/* 渲染块中的表格 */
+.wysiwyg-rendered-block table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.wysiwyg-rendered-block table th,
+.wysiwyg-rendered-block table td {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--editor-table-border);
+}
+
+.wysiwyg-rendered-block table th {
+  font-weight: 600;
+  background: var(--editor-table-head-bg);
+}

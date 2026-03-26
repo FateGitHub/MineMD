@@ -1,0 +1,35 @@
+appId: com.minemd.app
+productName: MineMD
+copyright: Copyright © 2024
+
+directories:
+  output: release
+
+files:
+  - dist
+  - dist-electron
+
+mac:
+  target:
+    - dmg
+    - zip
+  icon: resources/icon.icns
+  artifactName: ${productName}-${version}-mac.${ext}
+
+win:
+  target:
+    - nsis
+  icon: resources/icon.ico
+  artifactName: ${productName}-${version}-win.${ext}
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+
+linux:
+  target:
+    - AppImage
+    - deb
+  icon: resources/icon.png
+  artifactName: ${productName}-${version}-linux.${ext}

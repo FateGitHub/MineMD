@@ -1,0 +1,73 @@
+/**
+ * MineMD 默认主题 —— Apple HIG 风格
+ * 干净、精致、聚焦内容
+ */
+
+:root {
+  /* 字体栈 — Apple 系统字体优先 */
+  --editor-font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --editor-mono-font: 'SF Mono', 'JetBrains Mono', 'Fira Code', 'Cascadia Code', Menlo, Consolas, monospace;
+  --editor-font-size: 16px;
+  --editor-line-height: 1.6;
+
+  /* 配色方案 — Apple 标准 */
+  --editor-bg: #ffffff;
+  --editor-surface: #f5f5f7;
+  --editor-text: #1d1d1f;
+  --editor-heading-color: #1d1d1f;
+  --editor-link-color: #007aff;
+  --editor-quote-text: #86868b;
+  --editor-quote-border: rgba(0, 0, 0, 0.12);
+  --editor-code-bg: #f5f5f7;
+  --editor-code-text: #d63384;
+  --editor-table-border: rgba(0, 0, 0, 0.1);
+  --editor-table-head-bg: #f5f5f7;
+  --editor-hr-color: rgba(0, 0, 0, 0.1);
+  --editor-highlight-bg: rgba(255, 214, 10, 0.3);
+
+  /* 布局 */
+  --editor-content-max-width: 860px;
+  --editor-writing-area-padding: 32px 64px;
+}
+
+.dark {
+  --editor-bg: #1c1c1e;
+  --editor-surface: #2c2c2e;
+  --editor-text: #f5f5f7;
+  --editor-heading-color: #f5f5f7;
+  --editor-link-color: #0a84ff;
+  --editor-quote-text: #98989d;
+  --editor-quote-border: rgba(255, 255, 255, 0.12);
+  --editor-code-bg: #2c2c2e;
+  --editor-code-text: #ff6b9d;
+  --editor-table-border: rgba(255, 255, 255, 0.1);
+  --editor-table-head-bg: #2c2c2e;
+  --editor-hr-color: rgba(255, 255, 255, 0.1);
+  --editor-highlight-bg: rgba(255, 214, 10, 0.25);
+}
+
+/* 此文件为外部可选主题模板 */
+/* 用户可在 themes/ 目录下创建自定义 CSS 文件 */
+/* 通过 CSS 变量覆盖来实现主题自定义 */
+
+/*
+可覆盖的 CSS 变量列表：
+
+--editor-bg: 编辑器背景色
+--editor-surface: 面板/卡片背景色
+--editor-text: 编辑器文本色
+--editor-border: 边框色
+--editor-accent: 强调色
+--editor-sidebar-bg: 侧边栏背景色
+--editor-toolbar-bg: 工具栏背景色
+--editor-statusbar-bg: 状态栏背景色
+--editor-font-family: 编辑器字体
+--editor-mono-font: 等宽字体
+
+示例：
+:root {
+  --editor-bg: #fefefe;
+  --editor-text: #2c3e50;
+  --editor-accent: #5856d6;
+}
+*/
