@@ -10,6 +10,7 @@ release/
 # 编辑器 & IDE
 .vscode/
 .idea/
+.codebuddy/
 *.iml
 *.swp
 *.swo
