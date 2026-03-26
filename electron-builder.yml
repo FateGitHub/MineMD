@@ -32,4 +32,5 @@ linux:
     - AppImage
     - deb
   icon: resources/icon.png
+  category: Office
   artifactName: ${productName}-${version}-linux.${ext}
