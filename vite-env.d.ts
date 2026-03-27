@@ -2,8 +2,12 @@
 
 // Electron preload 暴露的 API 类型声明
 interface ElectronAPI {
+  // 拖拽文件路径获取
+  getPathForFile: (file: File) => string
+
   // 文件操作
   readFile: (filePath: string) => Promise<string>
+  dropOpenFile: (filePath: string) => Promise<{ filePath: string; content: string } | null>
   writeFile: (filePath: string, content: string) => Promise<void>
   openFile: () => Promise<{ filePath: string; content: string } | null>
   saveFile: (filePath: string, content: string) => Promise<string>

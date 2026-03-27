@@ -50,6 +50,30 @@ function createWindow() {
     backgroundColor: getThemeBackgroundColor(),
   })
 
+  // 阻止拖拽文件时窗口导航到文件（Electron 默认行为）
+  mainWindow.webContents.on('will-navigate', (event) => {
+    event.preventDefault()
+  })
+
+  // 处理从系统文件管理器拖拽文件到窗口
+  // 注意：需要在渲染进程中阻止默认 drop 行为，并通过 IPC 将文件路径发送到主进程
+  ipcMain.removeHandler('file:dropOpen')
+  ipcMain.handle('file:dropOpen', async (_event, filePath: string) => {
+    // 验证文件是 Markdown 类型
+    const ext = path.extname(filePath).toLowerCase()
+    const mdExtensions = ['.md', '.markdown', '.mdown', '.mkd']
+    if (!mdExtensions.includes(ext)) return null
+
+    // 读取文件内容
+    try {
+      const content = await fs.promises.readFile(filePath, 'utf-8')
+      return { filePath, content }
+    } catch (error) {
+      console.error('拖拽打开文件失败:', error)
+      return null
+    }
+  })
+
   // 窗口准备好后再显示，避免白屏闪烁
   mainWindow.once('ready-to-show', () => {
     mainWindow?.show()

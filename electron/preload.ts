@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, webUtils } from 'electron'
 
 /**
  * 预加载脚本：通过 contextBridge 安全地向渲染进程暴露 Electron API
@@ -14,8 +14,12 @@ let currentMenuHandler: ((_event: Electron.IpcRendererEvent, action: string) => 
 let currentOpenFileHandler: ((_event: Electron.IpcRendererEvent, filePath: string) => void) | null = null
 
 contextBridge.exposeInMainWorld('electronAPI', {
+  // ========== 拖拽文件路径获取 ==========
+  getPathForFile: (file: File) => webUtils.getPathForFile(file),
+
   // ========== 文件操作 ==========
   readFile: (filePath: string) => ipcRenderer.invoke('file:read', filePath),
+  dropOpenFile: (filePath: string) => ipcRenderer.invoke('file:dropOpen', filePath),
   writeFile: (filePath: string, content: string) =>
     ipcRenderer.invoke('file:write', filePath, content),
   openFile: () => ipcRenderer.invoke('file:open'),

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type { FileEntry } from '../types/index'
+import { useEditorStore } from './editorStore'
 
 interface FileInfo {
   /** 文件路径（null 表示未保存的新文件） */
@@ -91,6 +92,8 @@ export const useFileStore = create<FileState>((set, get) => ({
         isModified: false,
       },
     })
+    // 新建文件默认切换到实时预览模式，方便边写边看
+    useEditorStore.getState().setViewMode('live')
   },
 
   openFile: async () => {
@@ -117,6 +120,8 @@ export const useFileStore = create<FileState>((set, get) => ({
         })
         // 持久化保存当前文件路径
         window.electronAPI.storeSet('lastFilePath', result.filePath)
+        // 打开已有文件默认切换到预览模式
+        useEditorStore.getState().setViewMode('preview')
       }
     } catch (error) {
       console.error('Failed to open file:', error)
@@ -150,6 +155,8 @@ export const useFileStore = create<FileState>((set, get) => ({
       })
       // 持久化保存当前文件路径
       window.electronAPI.storeSet('lastFilePath', filePath)
+      // 打开已有文件默认切换到预览模式
+      useEditorStore.getState().setViewMode('preview')
     } catch (error) {
       console.error('Failed to open file by path:', error)
     }
@@ -333,6 +340,8 @@ export const useFileStore = create<FileState>((set, get) => ({
 
       // 自动打开新建的文件
       await get().openFileByPath(filePath)
+      // 新建文件默认切换到实时预览模式（覆盖 openFileByPath 的 preview 设置）
+      useEditorStore.getState().setViewMode('live')
     } catch (error) {
       console.error('新建文件失败:', error)
       window.electronAPI.showMessageBox({
@@ -389,6 +398,8 @@ export const useFileStore = create<FileState>((set, get) => ({
               isModified: false,
             },
           })
+          // 恢复已有文件默认切换到预览模式
+          useEditorStore.getState().setViewMode('preview')
         } catch {
           // 文件可能已被删除或移动，忽略错误
           console.warn('上次打开的文件不存在:', lastFilePath)

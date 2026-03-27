@@ -420,27 +420,12 @@ const wysiwygBlockUpdater = ViewPlugin.fromClass(
 
 /**
  * WYSIWYG 模式的额外编辑器样式
+ * 注意：大部分渲染块样式在 index.css 中定义，这里只放 CodeMirror 特有的覆盖
  */
 export const wysiwygStyles = EditorView.theme({
   // 隐藏行号，提供沉浸式写作体验
   '.cm-gutters': {
     display: 'none !important',
-  },
-  // 渲染后的块样式
-  '.wysiwyg-rendered-block': {
-    cursor: 'text',
-    borderRadius: '4px',
-    transition: 'background 150ms ease',
-  },
-  '.wysiwyg-rendered-block:hover': {
-    background: 'rgba(0, 122, 255, 0.03)',
-  },
-  // 确保 Widget 内的 markdown-body 样式正确
-  '.wysiwyg-rendered-block.markdown-body > *:first-child': {
-    marginTop: '0',
-  },
-  '.wysiwyg-rendered-block.markdown-body > *:last-child': {
-    marginBottom: '0',
   },
 })
 

@@ -138,10 +138,11 @@ body {
   letter-spacing: -0.01em;
 }
 
-/* ========== 滚动条 —— Apple 风格极细圆润 ========== */
+/* ========== 滚动条 —— macOS 风格，易选中 ========== */
+/* 默认状态：较细但可见，hover 时加宽便于拖动 */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -149,34 +150,59 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.12);
-  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
+  min-height: 48px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: rgba(0, 0, 0, 0.45);
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.35);
 }
 
-/* 滚动条仅在 hover 时出现 */
+.dark ::-webkit-scrollbar-thumb:active {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+/* 滚动条仅在容器 hover 时出现 */
 .editor-wrapper::-webkit-scrollbar-thumb,
 .sidebar-content::-webkit-scrollbar-thumb {
   background: transparent;
 }
 .editor-wrapper:hover::-webkit-scrollbar-thumb,
 .sidebar-content:hover::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.15);
+}
+.editor-wrapper:hover::-webkit-scrollbar-thumb:hover,
+.sidebar-content:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.35);
+}
+.editor-wrapper:hover::-webkit-scrollbar-thumb:active,
+.sidebar-content:hover::-webkit-scrollbar-thumb:active {
+  background: rgba(0, 0, 0, 0.45);
 }
 .dark .editor-wrapper:hover::-webkit-scrollbar-thumb,
 .dark .sidebar-content:hover::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.15);
+}
+.dark .editor-wrapper:hover::-webkit-scrollbar-thumb:hover,
+.dark .sidebar-content:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+.dark .editor-wrapper:hover::-webkit-scrollbar-thumb:active,
+.dark .sidebar-content:hover::-webkit-scrollbar-thumb:active {
+  background: rgba(255, 255, 255, 0.45);
 }
 
 /* ========== 布局容器 ========== */
@@ -1676,11 +1702,14 @@ body.split-dragging .preview-pane {
   overflow: auto;
 }
 
-/* 渲染后的 Markdown 块 —— 与 Preview 样式完全一致 */
+/* 渲染后的 Markdown 块 —— 与 Preview 样式保持一致 */
 .wysiwyg-rendered-block {
   cursor: text;
   border-radius: var(--radius-sm);
   transition: background var(--duration-fast) var(--ease-default);
+  /* 重置 white-space：cm-content 默认 white-space: pre，
+     widget 继承后会导致 HTML 中的 \n 被渲染为额外换行，行距翻倍 */
+  white-space: normal;
 }
 
 .wysiwyg-rendered-block:hover {
@@ -1699,6 +1728,13 @@ body.split-dragging .preview-pane {
   color: var(--editor-text);
 }
 
+/*
+ * WYSIWYG 块间距策略：
+ * 每个渲染块都是独立的 .markdown-body 容器，
+ * 所以 first-child/last-child 的 margin 需要保留部分，
+ * 以确保与 Preview 模式的视觉间距一致。
+ * 只清除 margin-top（因为块间距由 padding-bottom 统一控制）。
+ */
 .wysiwyg-rendered-block.markdown-body > *:first-child {
   margin-top: 0 !important;
 }
@@ -1707,14 +1743,114 @@ body.split-dragging .preview-pane {
   margin-bottom: 0 !important;
 }
 
-/* 渲染块中的图片 */
+/* ---- 标题块 —— 保持 h1/h2 的 border-bottom 和 padding ---- */
+.wysiwyg-rendered-block.markdown-body h1 {
+  font-size: 2em;
+  font-weight: 700;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--editor-separator);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--editor-heading-color);
+}
+
+.wysiwyg-rendered-block.markdown-body h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  padding-bottom: 0.25em;
+  border-bottom: 1px solid var(--editor-separator);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--editor-heading-color);
+}
+
+.wysiwyg-rendered-block.markdown-body h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--editor-heading-color);
+}
+
+.wysiwyg-rendered-block.markdown-body h4 {
+  font-size: 1em;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--editor-heading-color);
+}
+
+.wysiwyg-rendered-block.markdown-body h5 {
+  font-size: 0.875em;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--editor-heading-color);
+}
+
+.wysiwyg-rendered-block.markdown-body h6 {
+  font-size: 0.85em;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--editor-text-secondary);
+}
+
+/* ---- 段落 ---- */
+.wysiwyg-rendered-block.markdown-body p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* ---- 块引用 —— 与 Preview 完全一致 ---- */
+.wysiwyg-rendered-block.markdown-body blockquote {
+  margin: 0;
+  padding: 0 1em;
+  color: var(--editor-quote-text);
+  border-left: 3px solid var(--editor-accent);
+}
+
+/* ---- 列表 —— 与 Preview 一致 ---- */
+.wysiwyg-rendered-block.markdown-body ul {
+  padding-left: 2em;
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: disc;
+}
+
+.wysiwyg-rendered-block.markdown-body ol {
+  padding-left: 2em;
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: decimal;
+}
+
+.wysiwyg-rendered-block.markdown-body ul ul {
+  list-style-type: circle;
+}
+
+.wysiwyg-rendered-block.markdown-body ul ul ul {
+  list-style-type: square;
+}
+
+.wysiwyg-rendered-block.markdown-body li {
+  margin-top: var(--space-1);
+}
+
+/* ---- 水平线 —— 与 Preview 一致 ---- */
+.wysiwyg-rendered-block.markdown-body hr {
+  height: 1px;
+  padding: 0;
+  margin: var(--space-2) 0;
+  background-color: var(--editor-separator);
+  border: 0;
+}
+
+/* ---- 渲染块中的图片 ---- */
 .wysiwyg-rendered-block img {
   max-width: 100%;
   height: auto;
   border-radius: var(--radius-md);
 }
 
-/* 渲染块中的代码块 */
+/* ---- 渲染块中的代码块 ---- */
 .wysiwyg-rendered-block pre {
   background: var(--editor-code-bg);
   border-radius: var(--radius-md);
@@ -1722,6 +1858,7 @@ body.split-dragging .preview-pane {
   overflow-x: auto;
   margin: 0;
   line-height: 1.5;
+  white-space: pre;
 }
 
 .wysiwyg-rendered-block pre code {
@@ -1732,7 +1869,17 @@ body.split-dragging .preview-pane {
   padding: 0;
 }
 
-/* 渲染块中的 KaTeX 公式 */
+/* ---- 行内代码 —— 与 Preview 一致 ---- */
+.wysiwyg-rendered-block.markdown-body :not(pre) > code {
+  background: var(--editor-code-bg);
+  color: var(--editor-code-text);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-family: var(--editor-mono-font);
+  font-size: 0.88em;
+}
+
+/* ---- 渲染块中的 KaTeX 公式 ---- */
 .wysiwyg-rendered-block .katex-display {
   margin: var(--space-4) 0;
   overflow-x: auto;
@@ -1740,10 +1887,17 @@ body.split-dragging .preview-pane {
   padding: var(--space-2) 0;
 }
 
-/* 渲染块中的表格 */
+.wysiwyg-rendered-block.markdown-body .katex {
+  font-size: 1.1em;
+}
+
+/* ---- 渲染块中的表格 —— 与 Preview 一致（含交替行背景） ---- */
 .wysiwyg-rendered-block table {
   border-collapse: collapse;
+  border-spacing: 0;
   width: 100%;
+  margin: 0;
+  overflow: auto;
 }
 
 .wysiwyg-rendered-block table th,
@@ -1755,4 +1909,33 @@ body.split-dragging .preview-pane {
 .wysiwyg-rendered-block table th {
   font-weight: 600;
   background: var(--editor-table-head-bg);
+}
+
+.wysiwyg-rendered-block table tr:nth-child(2n) {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.dark .wysiwyg-rendered-block table tr:nth-child(2n) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* ---- 链接 —— 与 Preview 一致 ---- */
+.wysiwyg-rendered-block.markdown-body a {
+  color: var(--editor-link-color);
+  text-decoration: none;
+}
+
+.wysiwyg-rendered-block.markdown-body a:hover {
+  text-decoration: underline;
+}
+
+/* ---- 高亮 —— 与 Preview 一致 ---- */
+.wysiwyg-rendered-block.markdown-body mark {
+  background: var(--editor-highlight-bg);
+  padding: 2px var(--space-1);
+  border-radius: 3px;
+}
+
+.dark .wysiwyg-rendered-block.markdown-body mark {
+  color: #fff;
 }

@@ -298,6 +298,56 @@ function App() {
     }
   }, [handleMenuAction])
 
+  // 拖拽 .md 文件到窗口直接打开
+  useEffect(() => {
+    const handleDragOver = (e: DragEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+      // 设置拖拽效果提示
+      if (e.dataTransfer) {
+        e.dataTransfer.dropEffect = 'copy'
+      }
+    }
+
+    const handleDrop = async (e: DragEvent) => {
+      e.preventDefault()
+      e.stopPropagation()
+
+      const files = e.dataTransfer?.files
+      if (!files || files.length === 0) return
+
+      // 取第一个文件
+      const file = files[0]
+
+      // 使用 Electron webUtils.getPathForFile 获取文件真实路径
+      // Electron 32+ 移除了 File.path，必须使用此 API
+      let filePath: string | null = null
+      try {
+        filePath = window.electronAPI?.getPathForFile(file) ?? null
+      } catch {
+        console.warn('[拖拽打开] 获取文件路径失败')
+        return
+      }
+
+      if (!filePath) return
+
+      // 只处理 Markdown 文件
+      const ext = filePath.split('.').pop()?.toLowerCase()
+      const mdExtensions = ['md', 'markdown', 'mdown', 'mkd']
+      if (ext && mdExtensions.includes(ext)) {
+        useFileStore.getState().openFileByPath(filePath)
+      }
+    }
+
+    // 在捕获阶段监听，确保优先于 CodeMirror 等子组件处理
+    window.addEventListener('dragover', handleDragOver, true)
+    window.addEventListener('drop', handleDrop, true)
+    return () => {
+      window.removeEventListener('dragover', handleDragOver, true)
+      window.removeEventListener('drop', handleDrop, true)
+    }
+  }, [])
+
   // 全局快捷键（菜单之外的快捷键）
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
